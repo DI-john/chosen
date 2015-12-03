@@ -145,10 +145,15 @@ class Chosen extends AbstractChosen
     this.results_reset(evt) if evt.target.nodeName is "ABBR" and not @is_disabled
 
   search_results_mousewheel: (evt) ->
-    delta = evt.originalEvent.deltaY or -evt.originalEvent.wheelDelta or evt.originalEvent.detail if evt.originalEvent
+    if evt.deltaFactor
+      delta = -evt.deltaY * evt.deltaFactor
+    else
+      delta = evt.originalEvent.deltaY or -evt.originalEvent.wheelDelta or evt.originalEvent.detail if evt.originalEvent
+      delta = delta * 40 if evt.type is 'DOMMouseScroll'
+
     if delta?
       evt.preventDefault()
-      delta = delta * 40 if evt.type is 'DOMMouseScroll'
+
       @search_results.scrollTop(delta + @search_results.scrollTop())
 
   blur_test: (evt) ->
